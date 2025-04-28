@@ -18,13 +18,20 @@ const InnerWagmiConfig = ({ children }) => {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
   const navigate = useNavigate();
-  const { setIsAuthenticated, setToken, setWalletAddress, nonce, fetchNonce } = useAuth();
-  const [walletAuthStatus, setWalletAuthStatus] = React.useState("unauthenticated");
+  const { setIsAuthenticated, setToken, setWalletAddress, nonce, fetchNonce } =
+    useAuth();
+  const [walletAuthStatus, setWalletAuthStatus] =
+    React.useState("unauthenticated");
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const handleVerify = async ({ message, signature }) => {
     try {
-      console.log("Verifying with message:", message, "and signature:", signature);
+      console.log(
+        "Verifying with message:",
+        message,
+        "and signature:",
+        signature
+      );
       const connectResponse = await fetchWithRetry(
         "http://localhost:3000/user/connect-wallet",
         {
@@ -63,7 +70,8 @@ const InnerWagmiConfig = ({ children }) => {
       if (err.message.includes("User rejected request")) {
         userError = "Signature cancelled. Please approve the signature.";
       } else if (err.message.includes("Cannot read properties of null")) {
-        userError = "Wallet signing failed. Please ensure MetaMask is on Base Sepolia and try again.";
+        userError =
+          "Wallet signing failed. Please ensure MetaMask is on Base Sepolia and try again.";
       } else if (err.status === 500) {
         userError = "Server error: Unable to process wallet connection.";
       } else if (err.status === 401) {

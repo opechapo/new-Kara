@@ -25,8 +25,10 @@ export const ConnectWallet = () => {
         `http://localhost:3000/user/nonce/${address}`,
         { method: "GET" }
       );
+
       const nonceData = await nonceResponse.json();
       const nonce = nonceData.data.nonce;
+
       if (!nonce) {
         throw new Error("Invalid nonce received");
       }
@@ -45,7 +47,7 @@ export const ConnectWallet = () => {
       console.log("SIWE message prepared:", message);
 
       // Sign message
-      const signature = await signMessageAsync({ message });
+      const signature = await signMessageAsync({ message, account: address });
       console.log("Signature:", signature);
 
       // Send to backend
@@ -83,7 +85,8 @@ export const ConnectWallet = () => {
       if (err.message.includes("User rejected request")) {
         userError = "Signature cancelled. Please approve the signature.";
       } else if (err.message.includes("Cannot read properties of null")) {
-        userError = "Wallet signing failed. Please ensure MetaMask is on Base Sepolia.";
+        userError =
+          "Wallet signing failed. Please ensure MetaMask is on Base Sepolia.";
       }
       setErrorMessage(userError);
       disconnect();
